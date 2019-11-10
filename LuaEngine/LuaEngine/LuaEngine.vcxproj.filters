@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Quelldateien\Core">
+      <UniqueIdentifier>{01cd279c-7ff6-4c9d-aabe-750b2612b536}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Core">
+      <UniqueIdentifier>{7b44f3b8-563d-4cd0-93e6-69a1c90644f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Lua">
+      <UniqueIdentifier>{520d15f1-a84d-41fc-ae04-bc66f701f56e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Lua">
+      <UniqueIdentifier>{f95d1c4b-d56b-4e1b-92ed-6b55addeccee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Lua\lfs">
+      <UniqueIdentifier>{c1d806cd-ba95-4829-83a4-6016cc55fdbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Lua\lfs">
+      <UniqueIdentifier>{76325015-bf41-435d-b432-ec28e474d0b9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="alt-log.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="IMenu.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Hash.h">
+      <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\NativeEngine.h">
+      <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\NativeNames.h">
+      <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\lua\include\lauxlib.h">
+      <Filter>Headerdateien\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\lua\include\lua.h">
+      <Filter>Headerdateien\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\lua\include\lua.hpp">
+      <Filter>Headerdateien\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\lua\include\luaconf.h">
+      <Filter>Headerdateien\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\lua\include\luajit.h">
+      <Filter>Headerdateien\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\lua\include\lualib.h">
+      <Filter>Headerdateien\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lfs\lfs.h">
+      <Filter>Headerdateien\Lua\lfs</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LuaEngine.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="IMenu.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="core\NativeEngine.cpp">
+      <Filter>Quelldateien\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="lfs\lfs.c">
+      <Filter>Quelldateien\Lua\lfs</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+</Project>
