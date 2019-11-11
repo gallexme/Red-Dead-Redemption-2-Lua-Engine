@@ -4,14 +4,14 @@ on: [push]
 
 jobs:
   build:
-    runs-on: [windows-2016]
+    runs-on: [windows-latest]
 
     steps:
     - uses: actions/checkout@v1
     - name: Enable Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1.0.0
       with:
-        toolset: 14.16
+        toolset: 14.2
     - name: Build LuaEngine
       run: |
         cd LuaEngine
