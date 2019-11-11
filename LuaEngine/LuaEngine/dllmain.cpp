@@ -82,40 +82,37 @@ static int call_native(lua_State *L) {
 		lua_pop(L, 1);
 		int argIdx = 2;
 		for (std::string argument : argsTypes) {
-			if (argIdx >= nargs) {
-				break;
+
+			if (argument == "Any") {
+				ctx.Push((uint64_t)lua_tointeger(L, argIdx));
+
 			}
-			else
-				if (argument == "Any") {
-					ctx.Push((uint64_t)lua_tointeger(L, argIdx));
+			else if (argument == "int") {
+				ctx.Push((uint64_t)lua_tointeger(L, argIdx));
+			}
+			else if (argument == "bool") {
+				ctx.Push((bool)lua_tointeger(L, argIdx));
+			}
+			else if (argument == "float") {
+				ctx.Push((float)lua_tonumber(L, argIdx));
+			}
+			else if (argument == "Hash") {
+				ctx.Push(String::Hash(lua_tostring(L, argIdx)));
+			}
+			else if (argument == "Vector3") {
 
-				}
-				else if (argument == "int") {
-					ctx.Push((uint64_t)lua_tointeger(L, argIdx));
-				}
-				else if (argument == "bool") {
-					ctx.Push((bool)lua_tointeger(L, argIdx));
-				}
-				else if (argument == "float") {
-					ctx.Push((float)lua_tonumber(L, argIdx));
-				}
-				else if (argument == "Hash") {
-					ctx.Push(String::Hash(lua_tostring(L, argIdx)));
-				}
-				else if (argument == "Vector3") {
+				ctx.Push((float)lua_tonumber(L, argIdx));
+				ctx.Push((float)lua_tonumber(L, argIdx++));
+				ctx.Push((float)lua_tonumber(L, argIdx++));
 
-					ctx.Push((float)lua_tonumber(L, argIdx));
-					ctx.Push((float)lua_tonumber(L, argIdx++));
-					ctx.Push((float)lua_tonumber(L, argIdx++));
-
-				}
-				else if (argument == "const char*") {
-					ctx.Push(lua_tostring(L, argIdx));
-				}
-				else {
-					std::cout << "Unknown Arg: " << argument;
-					return 0;
-				}
+			}
+			else if (argument == "const char*") {
+				ctx.Push(lua_tostring(L, argIdx));
+			}
+			else {
+				std::cout << "Unknown Arg: " << argument;
+				return 0;
+			}
 
 			argIdx++;
 		}
@@ -142,7 +139,7 @@ static int call_native(lua_State *L) {
 			returnCount = 1;
 		}
 		else if (return_type == "Hash") {
-			uint64_t res = ctx.Result<uint64_t>();
+			unsigned int res = ctx.Result< unsigned int>();
 			lua_pushinteger(L, res);
 			returnCount = 1;
 		}
@@ -206,7 +203,7 @@ void LuaTick()
 			}
 			else {
 
-			lua_pop(L, 1);
+				lua_pop(L, 1);
 			}
 		}
 	}
@@ -224,25 +221,25 @@ static int wrap_exceptions(lua_State *L, lua_CFunction f)
 	Log::Info << "Wrapped Exception Called " << Log::Endl;
 	try {
 
-		Log::Info << "Safety First, no Call. "<<f << Log::Endl;
+		Log::Info << "Safety First, no Call. " << f << Log::Endl;
 
 		lua_pushliteral(L, "caught (...)");
 		return lua_error(L);
 		return f(L);  // Call wrapped function and return result.
 	}
 	catch (const char *s) {  // Catch and convert exceptions.
-		Log::Info << "Wrapped Exception: " <<s << Log::Endl;
+		Log::Info << "Wrapped Exception: " << s << Log::Endl;
 		lua_pushstring(L, s);
 
 	}
 
 	catch (std::exception& e) {
 
-		Log::Error << "Unknown Error: " << e.what()<<Log::Endl;
+		Log::Error << "Unknown Error: " << e.what() << Log::Endl;
 		lua_pushstring(L, e.what());
 	}
 	catch (...) {
-		Log::Error << "Unknown Error: "<< Log::Endl;
+		Log::Error << "Unknown Error: " << Log::Endl;
 		lua_pushliteral(L, "caught (...)");
 	}
 
@@ -357,7 +354,7 @@ extern "C" {
 
 					lua_pop(L, 1);
 				}
-				
+
 			}
 		}
 		catch (...) {
@@ -388,7 +385,7 @@ extern "C" {
 
 					lua_pop(L, 1);
 				}
-				
+
 			}
 		}
 		catch (...) {
