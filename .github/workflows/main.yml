@@ -11,7 +11,7 @@ jobs:
     - name: Enable Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1.0.0
       with:
-        toolset: 15.9
+        toolset: 14.16
     - name: Build LuaEngine
       run: |
         cd LuaEngine
