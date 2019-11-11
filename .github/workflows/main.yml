@@ -13,4 +13,17 @@ jobs:
     - name: Build LuaEngine
       run: |
         cd LuaEngine
-        msbuild -m /t:Build /p:Configuration=Release;Platform=Win64 LuaEngine.sln 
+        msbuild -m /t:Build /p:Configuration=Release;Platform=x64 LuaEngine.sln
+        mv "LuaEngine/x64/Release/LuaEngine.dll" lua
+        cd ..
+    - name: GitHub Upload Release Artifacts
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            lua/*
+           
+
