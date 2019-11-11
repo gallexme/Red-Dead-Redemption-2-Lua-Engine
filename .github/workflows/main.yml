@@ -1,0 +1,17 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Enable Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1.0.0
+    - name: Build LuaEngine
+      run: |
+        cd LuaEngine
+        msbuild LuaEngine.sln /t:Build /p:Configuration=Release;Platform=Win64
