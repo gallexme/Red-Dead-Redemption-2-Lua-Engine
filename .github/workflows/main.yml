@@ -19,10 +19,7 @@ jobs:
     - name: GitHub Upload Release Artifacts
       run: |
         mv "LuaEngine/x64/Release/LuaEngine.dll" lua
-    - uses: TheDoctor0/zip-release@v0.2.0
-      with:
-        filename: 'LuaEngine.zip'
-        path: lua
+        7z a LuaEngine.zip .\lua\*
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
