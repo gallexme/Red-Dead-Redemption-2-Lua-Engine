@@ -16389,11 +16389,11 @@
 			"comment": "",
 			"params": [
 				{
-					"type": "Any",
+					"type": "int",
 					"name": "p0"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p1"
 				}
 			],
@@ -16489,15 +16489,15 @@
 			"comment": "",
 			"params": [
 				{
-					"type": "Any",
+					"type": "int",
 					"name": "p0"
 				},
 				{
-					"type": "Any",
+					"type": "int",
 					"name": "p1"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p2"
 				}
 			],
@@ -45024,7 +45024,7 @@
 					"name": "p5"
 				}
 			],
-			"return_type": "Any",
+			"return_type": "Vector3",
 			"build": "1207"
 		},
 		"0xE04B48F2CC926253": {
@@ -45691,44 +45691,45 @@
 			"name": "CREATE_PED",
 			"comment": "",
 			"params": [
+				
 				{
-					"type": "Any",
+					"type": "Hash",
 					"name": "p0"
 				},
 				{
-					"type": "Any",
+					"type": "float",
 					"name": "p1"
 				},
 				{
-					"type": "Any",
+					"type": "float",
 					"name": "p2"
 				},
 				{
-					"type": "Any",
+					"type": "float",
 					"name": "p3"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p4"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p5"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p6"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p7"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p8"
 				}
 			],
-			"return_type": "Any",
+			"return_type": "int",
 			"build": "1207"
 		},
 		"0xCC0EF140F99365C5": {
@@ -58817,11 +58818,11 @@
 			"comment": "",
 			"params": [
 				{
-					"type": "Any",
+					"type": "int",
 					"name": "p0"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p1"
 				}
 			],
@@ -63987,11 +63988,11 @@
 			"comment": "",
 			"params": [
 				{
-					"type": "Any",
+					"type": "int",
 					"name": "p0"
 				}
 			],
-			"return_type": "Any",
+			"return_type": "const char*",
 			"build": "1207"
 		},
 		"0x5B6193813E03E4E9": {
@@ -64078,11 +64079,11 @@
 			"comment": "",
 			"params": [
 				{
-					"type": "Any",
+					"type": "int",
 					"name": "p0"
 				}
 			],
-			"return_type": "Any",
+			"return_type": "bool",
 			"build": "1207"
 		},
 		"0x4D51E59243281D80": {
@@ -64557,7 +64558,7 @@
 			"name": "_0x927861B2C08DBEA5",
 			"comment": "",
 			"params": [],
-			"return_type": "Any",
+			"return_type": "bool",
 			"build": "1207"
 		},
 		"0x1A51BFE60708E482": {
@@ -73142,11 +73143,11 @@
 			"comment": "",
 			"params": [
 				{
-					"type": "Any",
+					"type": "Hash",
 					"name": "p0"
 				},
 				{
-					"type": "Any",
+					"type": "bool",
 					"name": "p1"
 				}
 			],
@@ -73158,11 +73159,11 @@
 			"comment": "",
 			"params": [
 				{
-					"type": "Any",
+					"type": "Hash",
 					"name": "p0"
 				}
 			],
-			"return_type": "Any",
+			"return_type": "bool",
 			"build": "1207"
 		},
 		"0x4AD96EF928BD4F9A": {
@@ -73189,11 +73190,11 @@
 			"comment": "",
 			"params": [
 				{
-					"type": "Any",
+					"type": "Hash",
 					"name": "p0"
 				}
 			],
-			"return_type": "Any",
+			"return_type": "bool",
 			"build": "1207"
 		},
 		"0xC3F09DE9D6D17DDA": {

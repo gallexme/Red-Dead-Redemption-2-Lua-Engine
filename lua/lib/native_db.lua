@@ -10,10 +10,13 @@ function native(namespace,name,...)
     local func = namespace_hash_map[namespace][name]
     return natives.call_native(func,...)
 end
-local  function load_natives(natives) 
+local  function load_natives(nativedbFile) 
     local Json = require("json")
-    local jsondb = Json.decode(natives:read("*a"))
+    local jsondb = Json.decode(nativedbFile:read("*a"))
     for namespace,native_list in pairs(jsondb) do
+        if(_G[namespace] == nil) then
+            _G[namespace] = {}
+        end
         local function_hashmap = {}
         for native, definition in pairs(native_list) do
             local func_def = {}
@@ -33,11 +36,13 @@ local  function load_natives(natives)
            -- print(func)
             func_def["args"] = args
             function_hashmap[definition["name"]] = func_def
-
+            local prototype =  function(...) return natives.call_native(func_def,...) end 
+            _G[namespace][definition["name"]] = prototype
+            _G[definition["name"]] =prototype
         end
         namespace_hash_map[namespace] = function_hashmap
     end
-    natives:close()
+    nativedbFile:close()
 
     
 end
