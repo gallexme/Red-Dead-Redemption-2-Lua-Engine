@@ -4,7 +4,7 @@ LuaEngine is a ScriptHook Mod for writing LUA Mods/Scripts.
 
 ## Installation
 
-Download the latest Release and copy the LuaEngine.zip Contents into your GameFolder (we may gonna support outside GameFolder soon 
+Download the latest Release(https://github.com/gallexme/Red-Dead-Redemption-2-Lua-Engine/releases) and copy the LuaEngine.zip Contents into your GameFolder (we may gonna support outside GameFolder soon 
 
 ## Usage
 
