@@ -14,11 +14,12 @@ jobs:
         cd LuaEngine
         msbuild -m /t:Build /p:Configuration=Release LuaEngine.sln
         cd ..
-        mkdir scripts
+        mkdir release
         
-        mv "LuaEngine/x64/Release/LuaEngine.dll" scripts
-        mv lua scripts
-        7z a LuaEngine.zip scripts 
+        mv "LuaEngine/x64/Release/LuaEngine.dll" release
+        mkdir release/scripts
+        mv lua release/scripts
+        7z a LuaEngine.zip release 
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1.0.0
