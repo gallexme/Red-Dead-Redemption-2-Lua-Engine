@@ -11,39 +11,39 @@
 #include "types.h"
 #include <sstream>
 #include "LuaEngine.h"
-
+#include "keyboard.hpp"
 ALT_LOG_IMPL;
 
 
 
 
-    
 
-    BOOL APIENTRY DllMain(HMODULE hModule,
-        DWORD  ul_reason_for_call,
-        LPVOID lpReserved
-    )
+BOOL APIENTRY DllMain(HMODULE hModule,
+    DWORD  ul_reason_for_call,
+    LPVOID lpReserved
+)
+{
+    switch (ul_reason_for_call)
     {
-        switch (ul_reason_for_call)
-        {
         case DLL_PROCESS_ATTACH:
         {
-            
-            scriptRegister(hModule,Lua::Engine::ScriptRegister);
-             Lua::HModule = hModule;
-                //@TODO:        keyboardHandlerRegister(OnKeyboardMessage);
+
+            Lua::HModule = hModule;
+            keyboardHandlerRegister(OnKeyboardMessage);
+            scriptRegister(hModule, Lua::Engine::ScriptRegister);
+            //@TODO:        keyboardHandlerRegister(OnKeyboardMessage);
             break;
         }
-        case DLL_THREAD_ATTACH:
-        case DLL_THREAD_DETACH:
         case DLL_PROCESS_DETACH:
         {
             Lua::Engine::ScriptUnregister();
-
-         //@TODO:    keyboardHandlerUnregister(OnKeyboardMessage);
+            scriptUnregister(hModule);
+            keyboardHandlerUnregister(OnKeyboardMessage);
+            //@TODO:    keyboardHandlerUnregister(OnKeyboardMessage);
             break;
         }
-        return TRUE;
-        }
     }
+    return TRUE;
+
+}
 

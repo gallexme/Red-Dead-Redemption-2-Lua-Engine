@@ -136,12 +136,14 @@
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\lib\lua\include;..\lib\redhook2\inc</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64);..\lib\lua\bin;..\lib\redhook2\lib</LibraryPath>
+    <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='me|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>C:\Program Files\RedDeadRedemption2\scripts</OutDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\lib\lua\include;..\lib\redhook2\inc</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64);..\lib\lua\bin;..\lib\redhook2\lib</LibraryPath>
+    <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -153,12 +155,14 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\lib\lua\include;..\lib\redhook2\inc</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64);..\lib\lua\bin;..\lib\redhook2\lib</LibraryPath>
+    <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='me_rel|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>C:\Program Files\RedDeadRedemption2\scripts</OutDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\lib\lua\include;..\lib\redhook2\inc</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64);..\lib\lua\bin;..\lib\redhook2\lib</LibraryPath>
+    <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -315,12 +319,14 @@
     <ClInclude Include="..\lib\redhook2\inc\types.h" />
     <ClInclude Include="alt-log.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="keyboard.hpp" />
     <ClInclude Include="lfs\lfs.h" />
     <ClInclude Include="LuaEngine.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="lfs\lfs.c" />
     <ClCompile Include="LuaEngine.cpp" />
   </ItemGroup>

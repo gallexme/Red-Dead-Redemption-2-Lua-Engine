@@ -72,6 +72,9 @@
     <ClInclude Include="LuaEngine.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="keyboard.hpp">
+      <Filter>Headerdateien\RedHook2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -81,6 +84,9 @@
       <Filter>Quelldateien\Lua\lfs</Filter>
     </ClCompile>
     <ClCompile Include="LuaEngine.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

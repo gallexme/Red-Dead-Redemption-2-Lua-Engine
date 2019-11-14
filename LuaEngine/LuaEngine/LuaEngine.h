@@ -17,7 +17,7 @@ namespace Lua {
     {
         lua_State* LuaState;
 
-        std::wstring LuaEnginePath;
+        std::string LuaEnginePath;
     public:
         static void ScriptRegister();
         static void ScriptUnregister();
@@ -34,10 +34,12 @@ namespace Lua {
     class Methods {
     public:
         static int CallNative(lua_State* L);
-
-
+        static int KeyDown(lua_State* L);
+        static int KeyJustUp(lua_State* L);
+        static int KeyPressedOnce(lua_State* L);
+        static int ResetKeyState(lua_State* L);
         static int Wait(lua_State* L);
-        
+
     };
 
 }

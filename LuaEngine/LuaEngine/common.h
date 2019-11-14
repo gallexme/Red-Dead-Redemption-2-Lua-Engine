@@ -28,19 +28,19 @@ bool is_in(First&& first, T&& ... t)
     return ((first == t) || ...);
 }
 
-static std::wstring GetModulePath(HMODULE module)
+static std::string GetModulePath(HMODULE module)
 {
     DWORD size = MAX_PATH;
-    std::vector<wchar_t> buffer(size);
+    std::vector<char> buffer(size);
 
     do
     {
         buffer.resize(size);
-        GetModuleFileNameW(module, buffer.data(), size);
+        GetModuleFileNameA(module, buffer.data(), size);
         size *= 1.5;
     } while (GetLastError() == ERROR_INSUFFICIENT_BUFFER);
 
-    std::wstring modulePath = std::wstring(buffer.begin(), buffer.end());
+    std::string modulePath = std::string(buffer.begin(), buffer.end());
 
     size_t slashPos = modulePath.size();
     for (int i = modulePath.size() - 1; i >= 0; --i)
@@ -51,7 +51,7 @@ static std::wstring GetModulePath(HMODULE module)
         }
     }
 
-    std::wstring moduleDir = modulePath.substr(0, slashPos);
+    std::string moduleDir = modulePath.substr(0, slashPos);
     return moduleDir;
 }
 

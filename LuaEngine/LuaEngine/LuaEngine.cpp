@@ -1,10 +1,9 @@
 #include "LuaEngine.h"
+#include "keyboard.hpp"
 namespace Lua {
 
-int  Methods::CallNative(lua_State* L)
-{
-    
-
+    int  Methods::CallNative(lua_State* L)
+    {
         try {
             int nargs = lua_gettop(L);
             luaL_checktype(L, 1, LUA_TTABLE);
@@ -29,7 +28,7 @@ int  Methods::CallNative(lua_State* L)
             int argIdx = 2;
             for (std::string argument : argsTypes) {
 
-                if (is_in(argument, "int", "bool", "Ped", "Void", "Entity", "Vehicle", "Object", "cam", "BOOL", "Any")) {
+                if (is_in(argument, "int", "bool", "Ped", "Void", "Entity", "Vehicle", "Object", "Cam", "BOOL", "Any","Any*","char*","Blip","BOOL*","Pickup","Vehicle*","FireId","ScrHandle","Entity*","Blip*","BOOL*","Hash*","float*")) {
                     invoker::NativePush((Any)lua_tointeger(L, argIdx));
 
                 }
@@ -57,7 +56,7 @@ int  Methods::CallNative(lua_State* L)
                 argIdx++;
             }
             int returnCount = 0;
-            if (is_in(return_type, "int", "bool", "Ped", "Void", "Entity", "Vehicle", "Object", "cam", "BOOL", "Any")) {
+            if (is_in(return_type, "int", "bool", "Ped", "Void", "Entity", "Vehicle","FireId","Interior","Pickup","Blip","ScrHandle", "Object", "Cam", "BOOL", "Any")) {
                 Any res = invoker::NativeCall<Any>();
                 lua_pushinteger(L, res);
                 returnCount = 1;
@@ -112,6 +111,55 @@ int  Methods::CallNative(lua_State* L)
         return 1;   */
     }
 
+    int Methods::KeyDown(lua_State* L) {
+        luaL_checktype(L, 1, LUA_TNUMBER);
+        DWORD key = lua_tointeger(L, 1);
+        if (::KeyDown(key)) {
+            lua_pushboolean(L, true);
+        }
+        else {
+            lua_pushboolean(L, false);
+        }
+        return 1;
+    }
+    int Methods::KeyJustUp(lua_State* L) {
+        luaL_checktype(L, 1, LUA_TNUMBER);
+        bool exclusive = true;
+        if (lua_isboolean(L, 2)) {
+            exclusive = lua_toboolean(L, 2);
+        }
+        DWORD key = lua_tointeger(L, 1);
+        if (::KeyJustUp(key,exclusive)) {
+            lua_pushboolean(L, true);
+        }
+        else {
+            lua_pushboolean(L, false);
+        }
+        return 1;
+
+    }
+    int  Methods::KeyPressedOnce(lua_State* L){
+        luaL_checktype(L, 1, LUA_TBOOLEAN);
+        luaL_checktype(L, 2, LUA_TNUMBER);
+        bool bIsPressed = lua_toboolean(L, 1);
+        DWORD key = lua_tointeger(L, 2);
+        if (::KeyPressedOnce(bIsPressed,key)) {
+            lua_pushboolean(L, true);
+        }
+        else {
+            lua_pushboolean(L, false);
+        }
+        return 1;
+
+    }
+    int  Methods::ResetKeyState(lua_State* L) {
+        luaL_checktype(L, 1, LUA_TNUMBER);
+        DWORD key = lua_tointeger(L, 1);
+        ::ResetKeyState(key);
+        
+        return 0;
+
+    }
     int Methods::Wait(lua_State* L)
     {
         luaL_checktype(L, 1, LUA_TNUMBER);
@@ -120,106 +168,112 @@ int  Methods::CallNative(lua_State* L)
         return 0;
     }
 
-static const luaL_reg modfuncs[] =
-{
-    { "call_native", Methods::CallNative},
-    { "scriptwait", Methods::Wait},
-
-    { NULL, NULL }
-};
- void Engine::ScriptRegister()
-{
-    luaEngine = new Engine();
-    luaEngine->Init();
-    luaEngine->Run();
-}
- void Engine::ScriptUnregister()
-{
-     luaEngine->Shutdown();
-     delete luaEngine;
-}
-void Engine::Init()
-{
-    AllocConsole();
-    SetConsoleTitle(L"LuaEngine");
-
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
-
-    auto outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    const int width = 110;
-    const int height = 30;
-
-    // Add some more scrolling
-    COORD size;
-    size.X = width;
-    size.Y = height * 10;
-    SetConsoleScreenBufferSize(outputHandle, size);
-
-    // Resize our console window
-    SMALL_RECT rect;
-    rect.Left = rect.Top = 0;
-    rect.Right = width - 1;
-    rect.Bottom = height - 1;
-    SetConsoleWindowInfo(outputHandle, TRUE, &rect);
-    Log::Info << "Natives registered" << Log::Endl;
-    LuaEnginePath = GetModulePath(HModule);
-    std::wstring logPath = LuaEnginePath + L"/log.txt";
-    Log::Push(new Log::FileStream(logPath));
-    Log::Push(new Log::ConsoleStream());
-   
-
-}
-
-void Engine::Shutdown()
-{
-
-    /* cleanup Lua */
-    if (LuaState != nullptr) {
-        lua_close(LuaState);
-        LuaState = nullptr;
+    static const luaL_reg modfuncs[] =
+    {
+        { "CallNative", Methods::CallNative},
+        { "ScriptWait", Methods::Wait},
+        { "KeyDown", Methods::KeyDown},
+        { "KeyJustUp", Methods::KeyJustUp},
+        { "KeyPressedOnce", Methods::KeyPressedOnce},
+        { "ResetKeyState", Methods::ResetKeyState},
+        { NULL, NULL }
+    };
+    void Engine::ScriptRegister()
+    {
+        luaEngine = new Engine();
+        luaEngine->Init();
+        luaEngine->Run();
     }
-}
-
-void Engine::Run()
-{
-    Shutdown();
-
-    LuaState = luaL_newstate();
-    luaL_openlibs(LuaState);
-    luaopen_lfs(LuaState);
-
-    luaL_register(LuaState, "natives", modfuncs);
-
-    std::ostringstream LuaMainPath;
-    LuaMainPath << LuaEnginePath.c_str() << "/" << "/scripts/lua/main.lua";
-    Log::Info << "Lua Restarted, Starting Main" << Log::Endl;
-    auto error = luaL_dofile(LuaState, LuaMainPath.str().c_str());
-    if (error) {
-        // the top of the stack should be the error string
-        auto err = lua_tostring(LuaState, -1); // read the LuaJIT error, works too
-        Log::Error << "Lua Tick Error: " << err << Log::Endl;
-        lua_pop(LuaState, 1);
-
-        lua_close(LuaState);
-        LuaState = nullptr;
-        return;
+    void Engine::ScriptUnregister()
+    {
+        luaEngine->Shutdown();
+        delete luaEngine;
     }
-    Run();
-}
+    void Engine::Init()
+    {
+
+        LuaEnginePath = GetModulePath(HModule);
+        std::string logPath = LuaEnginePath + "/log.txt";
+
+        Log::Push(new Log::FileStream(logPath));
+        Log::Push(new Log::ConsoleStream());
+        AllocConsole();
+        SetConsoleTitle(L"LuaEngine");
+
+        freopen("CONOUT$", "w", stdout);
+        freopen("CONOUT$", "w", stderr);
+
+        auto outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        const int width = 110;
+        const int height = 30;
+
+        // Add some more scrolling
+        COORD size;
+        size.X = width;
+        size.Y = height * 10;
+        SetConsoleScreenBufferSize(outputHandle, size);
+
+        // Resize our console window
+        SMALL_RECT rect;
+        rect.Left = rect.Top = 0;
+        rect.Right = width - 1;
+        rect.Bottom = height - 1;
+        SetConsoleWindowInfo(outputHandle, TRUE, &rect);
+        Log::Info << "Natives registered" << Log::Endl;
 
 
 
-void Engine::Stop()
-{
-}
+    }
 
-Engine::~Engine()
-{
-    delete LuaState;
-    LuaState = nullptr;
-    delete this;
-}
+    void Engine::Shutdown()
+    {
+
+        /* cleanup Lua */
+        if (LuaState != nullptr) {
+            lua_close(LuaState);
+            LuaState = nullptr;
+        }
+    }
+
+    void Engine::Run()
+    {
+        Shutdown();
+
+        LuaState = luaL_newstate();
+        luaL_openlibs(LuaState);
+        luaopen_lfs(LuaState);
+
+        luaL_register(LuaState, "engine", modfuncs);
+
+        std::ostringstream LuaMainPath;
+        LuaMainPath << LuaEnginePath.c_str() << "/" << "/scripts/lua/main.lua";
+        Log::Info << "Lua Restarted, Starting Main" << Log::Endl;
+        auto error = luaL_dofile(LuaState, LuaMainPath.str().c_str());
+        if (error) {
+            // the top of the stack should be the error string
+            auto err = lua_tostring(LuaState, -1); // read the LuaJIT error, works too
+            Log::Error << "Lua Tick Error: " << err << Log::Endl;
+            lua_pop(LuaState, 1);
+
+            lua_close(LuaState);
+            LuaState = nullptr;
+            return;
+        }
+        Run();
+    }
+
+
+
+    void Engine::Stop()
+    {
+    }
+
+    Engine::~Engine()
+    {
+        delete LuaState;
+        LuaState = nullptr;
+        delete this;
+    }
 
 }
