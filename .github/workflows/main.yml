@@ -16,7 +16,7 @@ jobs:
         cd ..
         mkdir release
         
-        mv "LuaEngine/x64/Release/LuaEngine.dll" release
+        mv "LuaEngine/x64/Release/LuaEngine.asi" release
         mkdir release/scripts
         mv lua release/scripts
         7z a LuaEngine.zip release 
