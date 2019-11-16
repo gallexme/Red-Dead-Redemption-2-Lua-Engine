@@ -27,7 +27,6 @@ namespace Lua {
         void Run();
         void Stop();
         ~Engine();
-
     };
 
     static Engine* luaEngine;
@@ -39,7 +38,5 @@ namespace Lua {
         static int KeyPressedOnce(lua_State* L);
         static int ResetKeyState(lua_State* L);
         static int Wait(lua_State* L);
-
     };
-
 }

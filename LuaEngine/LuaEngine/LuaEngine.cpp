@@ -1,7 +1,6 @@
 #include "LuaEngine.h"
 #include "keyboard.hpp"
 namespace Lua {
-
     int  Methods::CallNative(lua_State* L)
     {
         try {
@@ -27,22 +26,23 @@ namespace Lua {
             lua_pop(L, 1);
             int argIdx = 2;
             for (std::string argument : argsTypes) {
-
-                if (is_in(argument, "int", "bool", "Ped", "Void", "Entity", "Vehicle", "Object", "Cam", "BOOL", "Any","Any*","char*","Blip","BOOL*","Pickup","Vehicle*","FireId","ScrHandle","Entity*","Blip*","BOOL*","Hash*","float*")) {
+                if (is_in(argument, "Player","int",  "Ped", "Void", "Entity", "Vehicle", "Object", "Cam", "BOOL", "Any", "Any*", "char*", "Blip",  "Pickup", "Vehicle*", "FireId", "ScrHandle", "Entity*", "Blip*", "BOOL*", "Hash*", "float*")) {
                     invoker::NativePush((Any)lua_tointeger(L, argIdx));
-
                 }
                 else if (argument == "float") {
                     invoker::NativePush((float)lua_tonumber(L, argIdx));
+                }
+                else if (argument == "bool") {
+                    invoker::NativePush((bool)lua_tonumber(L, argIdx));
                 }
                 else if (argument == "Hash") {
                     invoker::NativePush((unsigned int)lua_tointeger(L, argIdx));
                 }
                 else if (argument == "Vector3") {
-
-                    invoker::NativePush((float)lua_tonumber(L, argIdx));
-                    invoker::NativePush((float)lua_tonumber(L, argIdx++));
-                    invoker::NativePush((float)lua_tonumber(L, argIdx++));
+                    Vector3 vecToPush= Vector3();
+                    vecToPush.x = (float)lua_tonumber(L, argIdx++);
+                    vecToPush.y = (float)lua_tonumber(L, argIdx++);
+                    vecToPush.z = (float)lua_tonumber(L, argIdx++);
 
                 }
                 else if (argument == "const char*") {
@@ -56,11 +56,10 @@ namespace Lua {
                 argIdx++;
             }
             int returnCount = 0;
-            if (is_in(return_type, "int", "bool", "Ped", "Void", "Entity", "Vehicle","FireId","Interior","Pickup","Blip","ScrHandle", "Object", "Cam", "BOOL", "Any")) {
+            if (is_in(return_type, "Player","int", "bool", "Ped", "Void", "Entity", "Vehicle", "FireId", "Interior", "Pickup", "Blip", "ScrHandle", "Object", "Cam", "BOOL", "Any")) {
                 Any res = invoker::NativeCall<Any>();
                 lua_pushinteger(L, res);
                 returnCount = 1;
-
             }
             else if (return_type == "float") {
                 float res = invoker::NativeCall<float>();
@@ -78,10 +77,8 @@ namespace Lua {
                 lua_pushnumber(L, res.y);
                 lua_pushnumber(L, res.z);
                 returnCount = 3;
-
             }
             else if (return_type == "const char*") {
-
                 const char* res = invoker::NativeCall<const char*>();
                 lua_pushstring(L, res);
 
@@ -89,7 +86,7 @@ namespace Lua {
                 returnCount = 1;
             }
             else if (return_type == "void") {
-
+                invoker::NativeCall<Void>();
             }
             else {
                 std::cout << "Unknown return_type: " << return_type;
@@ -129,36 +126,33 @@ namespace Lua {
             exclusive = lua_toboolean(L, 2);
         }
         DWORD key = lua_tointeger(L, 1);
-        if (::KeyJustUp(key,exclusive)) {
+        if (::KeyJustUp(key, exclusive)) {
             lua_pushboolean(L, true);
         }
         else {
             lua_pushboolean(L, false);
         }
         return 1;
-
     }
-    int  Methods::KeyPressedOnce(lua_State* L){
+    int  Methods::KeyPressedOnce(lua_State* L) {
         luaL_checktype(L, 1, LUA_TBOOLEAN);
         luaL_checktype(L, 2, LUA_TNUMBER);
         bool bIsPressed = lua_toboolean(L, 1);
         DWORD key = lua_tointeger(L, 2);
-        if (::KeyPressedOnce(bIsPressed,key)) {
+        if (::KeyPressedOnce(bIsPressed, key)) {
             lua_pushboolean(L, true);
         }
         else {
             lua_pushboolean(L, false);
         }
         return 1;
-
     }
     int  Methods::ResetKeyState(lua_State* L) {
         luaL_checktype(L, 1, LUA_TNUMBER);
         DWORD key = lua_tointeger(L, 1);
         ::ResetKeyState(key);
-        
-        return 0;
 
+        return 0;
     }
     int Methods::Wait(lua_State* L)
     {
@@ -191,7 +185,6 @@ namespace Lua {
     }
     void Engine::Init()
     {
-
         LuaEnginePath = GetModulePath(HModule);
         std::string logPath = LuaEnginePath + "/log.txt";
 
@@ -221,14 +214,10 @@ namespace Lua {
         rect.Bottom = height - 1;
         SetConsoleWindowInfo(outputHandle, TRUE, &rect);
         Log::Info << "Natives registered" << Log::Endl;
-
-
-
     }
 
     void Engine::Shutdown()
     {
-
         /* cleanup Lua */
         if (LuaState != nullptr) {
             lua_close(LuaState);
@@ -263,8 +252,6 @@ namespace Lua {
         Run();
     }
 
-
-
     void Engine::Stop()
     {
     }
@@ -275,5 +262,4 @@ namespace Lua {
         LuaState = nullptr;
         delete this;
     }
-
 }
