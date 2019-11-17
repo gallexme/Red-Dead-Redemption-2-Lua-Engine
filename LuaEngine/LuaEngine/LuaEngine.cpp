@@ -26,37 +26,35 @@ namespace Lua {
             lua_pop(L, 1);
             int argIdx = 2;
             for (std::string argument : argsTypes) {
-                if (is_in(argument, "Player","int",  "Ped", "Void", "Entity", "Vehicle", "Object", "Cam", "BOOL", "Any", "Any*", "char*", "Blip",  "Pickup", "Vehicle*", "FireId", "ScrHandle", "Entity*", "Blip*", "BOOL*", "Hash*", "float*")) {
-                    invoker::NativePush((Any)lua_tointeger(L, argIdx));
+                if (is_in(argument, "Player", "int", "Ped", "Void", "Entity", "Vehicle", "Object", "Cam", "BOOL", "Any", "Any*", "char*", "Blip", "Pickup", "Vehicle*", "FireId", "ScrHandle", "Entity*", "Blip*", "BOOL*", "Hash*", "float*")) {
+                    invoker::NativePush((Any)lua_tointeger(L, argIdx++));
                 }
                 else if (argument == "float") {
-                    invoker::NativePush((float)lua_tonumber(L, argIdx));
+                    invoker::NativePush((float)lua_tonumber(L, argIdx++));
                 }
                 else if (argument == "bool") {
-                    invoker::NativePush((bool)lua_tonumber(L, argIdx));
+                    invoker::NativePush((bool)lua_tonumber(L, argIdx++));
                 }
                 else if (argument == "Hash") {
-                    invoker::NativePush((unsigned int)lua_tointeger(L, argIdx));
+                    invoker::NativePush((unsigned int)lua_tointeger(L, argIdx++));
                 }
                 else if (argument == "Vector3") {
-                    Vector3 vecToPush= Vector3();
+                    Vector3 vecToPush = Vector3();
                     vecToPush.x = (float)lua_tonumber(L, argIdx++);
                     vecToPush.y = (float)lua_tonumber(L, argIdx++);
                     vecToPush.z = (float)lua_tonumber(L, argIdx++);
-
                 }
                 else if (argument == "const char*") {
-                    invoker::NativePush(lua_tostring(L, argIdx));
+                    invoker::NativePush(lua_tostring(L, argIdx++));
                 }
                 else {
                     std::cout << "Unknown Arg: " << argument;
+                    argIdx++;
                     return 0;
                 }
-
-                argIdx++;
             }
             int returnCount = 0;
-            if (is_in(return_type, "Player","int", "bool", "Ped", "Void", "Entity", "Vehicle", "FireId", "Interior", "Pickup", "Blip", "ScrHandle", "Object", "Cam", "BOOL", "Any")) {
+            if (is_in(return_type, "Player", "int", "bool", "Ped", "Void", "Entity", "Vehicle", "FireId", "Interior", "Pickup", "Blip", "ScrHandle", "Object", "Cam", "BOOL", "Any")) {
                 Any res = invoker::NativeCall<Any>();
                 lua_pushinteger(L, res);
                 returnCount = 1;
@@ -78,9 +76,14 @@ namespace Lua {
                 lua_pushnumber(L, res.z);
                 returnCount = 3;
             }
-            else if (return_type == "const char*") {
+            else if (is_in(return_type, "const char*", "char*")) {
                 const char* res = invoker::NativeCall<const char*>();
-                lua_pushstring(L, res);
+                if (res != nullptr && res[0] != '\0') {
+                    lua_pushstring(L, res);
+                }
+                else {
+                    lua_pushboolean(L, false);
+                }
 
                 //lua_pushinteger(L, ctx.ResultPointer());
                 returnCount = 1;
@@ -233,7 +236,7 @@ namespace Lua {
         luaL_openlibs(LuaState);
         luaopen_lfs(LuaState);
 
-        luaL_register(LuaState, "engine", modfuncs);
+        luaL_register(LuaState, "LUAENGINE", modfuncs);
 
         std::ostringstream LuaMainPath;
         LuaMainPath << LuaEnginePath.c_str() << "/" << "/scripts/lua/main.lua";
@@ -242,13 +245,18 @@ namespace Lua {
         if (error) {
             // the top of the stack should be the error string
             auto err = lua_tostring(LuaState, -1); // read the LuaJIT error, works too
-            Log::Error << "Lua Tick Error: " << err << Log::Endl;
+            Log::Error << "Lua Error: " << err << Log::Endl;
             lua_pop(LuaState, 1);
 
             lua_close(LuaState);
             LuaState = nullptr;
             return;
         }
+        /*std::cout << "IS_MODEL_VALID: " << IS_MODEL_VALID();
+        std::cout << "HAS_MODEL_LOADED: " << HAS_MODEL_LOADED();
+        std::cout << "REQUEST_MODEL ";
+        std::cout << "HAS_MODEL_LOADED: " << HAS_MODEL_LOADED();
+        */
         Run();
     }
 
