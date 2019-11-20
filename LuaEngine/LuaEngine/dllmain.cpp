@@ -7,7 +7,7 @@
 
 #include "common.h"
 #include "lfs/lfs.h"
-#include "redhook2.h"
+#include "main.h"
 #include "types.h"
 #include <sstream>
 #include "LuaEngine.h"
@@ -22,21 +22,18 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-    {
+
         Lua::HModule = hModule;
-        keyboardHandlerRegister(OnKeyboardMessage);
         scriptRegister(hModule, Lua::Engine::ScriptRegister);
-        //@TODO:        keyboardHandlerRegister(OnKeyboardMessage);
+        keyboardHandlerRegister(OnKeyboardMessage);
         break;
-    }
+
     case DLL_PROCESS_DETACH:
-    {
-        Lua::Engine::ScriptUnregister();
         scriptUnregister(hModule);
+        Log::Error << "Closing Stuff Detach Happend";
+        Lua::Engine::BeforeScriptUnregister();
         keyboardHandlerUnregister(OnKeyboardMessage);
-        //@TODO:    keyboardHandlerUnregister(OnKeyboardMessage);
         break;
-    }
     }
     return TRUE;
 }

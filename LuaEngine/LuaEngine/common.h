@@ -43,7 +43,7 @@ static std::string GetModulePath(HMODULE module)
     std::string modulePath = std::string(buffer.begin(), buffer.end());
 
     size_t slashPos = modulePath.size();
-    for (int i = modulePath.size() - 1; i >= 0; --i)
+    for (size_t i = modulePath.size() - 1; i >= 0; --i)
     {
         if (modulePath[i] == L'/' || modulePath[i] == L'\\') {
             slashPos = i;

@@ -12,7 +12,7 @@ namespace Lua {
             const char* native_string = lua_tostring(L, -1);
             uint64_t native = strtoull(native_string, NULL, 0);
 
-            invoker::NativeInit(native);
+            nativeInit(native);
             lua_getfield(L, 1, "args");
             std::vector<std::string> argsTypes = std::vector<std::string>();
 
@@ -26,17 +26,47 @@ namespace Lua {
             lua_pop(L, 1);
             int argIdx = 2;
             for (std::string argument : argsTypes) {
-                if (is_in(argument, "Player", "int", "Ped", "Void", "Entity", "Vehicle", "Object", "Cam", "BOOL", "Any", "Any*", "char*", "Blip", "Pickup", "Vehicle*", "FireId", "ScrHandle", "Entity*", "Blip*", "BOOL*", "Hash*", "float*")) {
-                    invoker::NativePush((Any)lua_tointeger(L, argIdx++));
+                if (is_in(argument,
+                    "BOOL",
+                    "Entity",
+                    "Player",
+                    "FireId",
+                    "Ped",
+                    "Vehicle",
+                    "Cam",
+                    "CarGenerator",
+                    "Group",
+                    "Train",
+                    "Pickup",
+                    "Object",
+                    "Weapon",
+                    "Interior",
+                    "Blip",
+                    "Texture",
+                    "TextureDict",
+                    "CoverPoint",
+                    "Camera",
+                    "TaskSequence",
+                    "ColourIndex",
+                    "Sphere",
+                    "ScrHandle",
+                    "int"
+                )) {
+                    nativePush((Player)lua_tointeger(L, argIdx++));
+                    /*"Player", "int", "Ped", "Void", "Entity", "Vehicle", "Object", "Cam", "BOOL", "Blip", "Pickup", "Vehicle*", "FireId", "ScrHandle", "Entity*", "Blip*", "BOOL*", "Hash*", "float*"*/
                 }
-                else if (argument == "float") {
-                    invoker::NativePush((float)lua_tonumber(L, argIdx++));
+                else  if (is_in(argument, "Vehicle*", "Entity*", "Blip*", "BOOL*", "Hash*", "float*", "Any*")) {
+                    nativePush((Any)lua_tointeger(L, argIdx++));
+                    Log::Error << "[TODO]Pointer Type: " << argument;
                 }
-                else if (argument == "bool") {
-                    invoker::NativePush((bool)lua_tonumber(L, argIdx++));
+                else  if (is_in(argument, "Void", "Any", "uint", "Hash")) {
+                    nativePush((Any)lua_tointeger(L, argIdx++));
                 }
-                else if (argument == "Hash") {
-                    invoker::NativePush((unsigned int)lua_tointeger(L, argIdx++));
+                else if (is_in(argument, "float")) {
+                    nativePush((float)lua_tonumber(L, argIdx++));
+                }
+                else if (is_in(argument, "bool")) {
+                    nativePush((bool)lua_tonumber(L, argIdx++));
                 }
                 else if (argument == "Vector3") {
                     Vector3 vecToPush = Vector3();
@@ -44,40 +74,58 @@ namespace Lua {
                     vecToPush.y = (float)lua_tonumber(L, argIdx++);
                     vecToPush.z = (float)lua_tonumber(L, argIdx++);
                 }
-                else if (argument == "const char*") {
-                    invoker::NativePush(lua_tostring(L, argIdx++));
+                else if (is_in(argument, "const char*", "char*")) {
+                    nativePush(lua_tostring(L, argIdx++));
                 }
                 else {
-                    std::cout << "Unknown Arg: " << argument;
+                    Log::Error << "Unknown Arg: " << argument;
                     argIdx++;
                     return 0;
                 }
             }
             int returnCount = 0;
-            if (is_in(return_type, "Player", "int", "bool", "Ped", "Void", "Entity", "Vehicle", "FireId", "Interior", "Pickup", "Blip", "ScrHandle", "Object", "Cam", "BOOL", "Any")) {
-                Any res = invoker::NativeCall<Any>();
+            if (is_in(return_type, "BOOL",
+                "Entity",
+                "Player",
+                "FireId",
+                "Ped",
+                "Vehicle",
+                "Cam",
+                "CarGenerator",
+                "Group",
+                "Train",
+                "Pickup",
+                "Object",
+                "Weapon",
+                "Interior",
+                "Blip",
+                "Texture",
+                "TextureDict",
+                "CoverPoint",
+                "Camera",
+                "TaskSequence",
+                "ColourIndex",
+                "Sphere",
+                "ScrHandle",
+                "int")) {
+                Player res = nativeCall<Player>();
                 lua_pushinteger(L, res);
                 returnCount = 1;
             }
             else if (return_type == "float") {
-                float res = invoker::NativeCall<float>();
+                float res = nativeCall<float>();
                 lua_pushnumber(L, res);
                 returnCount = 1;
             }
-            else if (return_type == "Hash") {
-                Hash  res = invoker::NativeCall< Hash >();
-                lua_pushinteger(L, res);
-                returnCount = 1;
-            }
             else if (return_type == "Vector3") {
-                Vector3 res = invoker::NativeCall<Vector3>();
+                Vector3 res = nativeCall<Vector3>();
                 lua_pushnumber(L, res.x);
                 lua_pushnumber(L, res.y);
                 lua_pushnumber(L, res.z);
                 returnCount = 3;
             }
             else if (is_in(return_type, "const char*", "char*")) {
-                const char* res = invoker::NativeCall<const char*>();
+                const char* res = nativeCall<const char*>();
                 if (res != nullptr && res[0] != '\0') {
                     lua_pushstring(L, res);
                 }
@@ -88,8 +136,10 @@ namespace Lua {
                 //lua_pushinteger(L, ctx.ResultPointer());
                 returnCount = 1;
             }
-            else if (return_type == "void") {
-                invoker::NativeCall<Void>();
+            else  if (is_in(return_type, "void", "Void", "Any", "uint", "Hash")) {
+                Void res = nativeCall<Void>();
+                lua_pushinteger(L, res);
+                returnCount = 1;
             }
             else {
                 std::cout << "Unknown return_type: " << return_type;
@@ -111,43 +161,29 @@ namespace Lua {
         return 1;   */
     }
 
-    int Methods::KeyDown(lua_State* L) {
+    int Methods::IsKeyDown(lua_State* L) {
         luaL_checktype(L, 1, LUA_TNUMBER);
         DWORD key = lua_tointeger(L, 1);
-        if (::KeyDown(key)) {
-            lua_pushboolean(L, true);
-        }
-        else {
-            lua_pushboolean(L, false);
-        }
+        lua_pushboolean(L, ::IsKeyDown(key));
+
         return 1;
     }
-    int Methods::KeyJustUp(lua_State* L) {
+    int Methods::IsKeyJustUp(lua_State* L) {
         luaL_checktype(L, 1, LUA_TNUMBER);
         bool exclusive = true;
         if (lua_isboolean(L, 2)) {
             exclusive = lua_toboolean(L, 2);
         }
         DWORD key = lua_tointeger(L, 1);
-        if (::KeyJustUp(key, exclusive)) {
-            lua_pushboolean(L, true);
-        }
-        else {
-            lua_pushboolean(L, false);
-        }
+        lua_pushboolean(L, ::IsKeyJustUp(key, exclusive));
+
         return 1;
     }
-    int  Methods::KeyPressedOnce(lua_State* L) {
-        luaL_checktype(L, 1, LUA_TBOOLEAN);
-        luaL_checktype(L, 2, LUA_TNUMBER);
-        bool bIsPressed = lua_toboolean(L, 1);
-        DWORD key = lua_tointeger(L, 2);
-        if (::KeyPressedOnce(bIsPressed, key)) {
-            lua_pushboolean(L, true);
-        }
-        else {
-            lua_pushboolean(L, false);
-        }
+    int Methods::IsKeyDownLong(lua_State* L) {
+        luaL_checktype(L, 1, LUA_TNUMBER);
+        DWORD key = lua_tointeger(L, 1);
+        lua_pushboolean(L, ::IsKeyDownLong(key));
+
         return 1;
     }
     int  Methods::ResetKeyState(lua_State* L) {
@@ -164,15 +200,70 @@ namespace Lua {
         scriptWait(time);
         return 0;
     }
+    int Methods::WorldGetAllVehicles(lua_State* L) {
+        const int ARR_SIZE = 1024;
+        Vehicle vehicles[ARR_SIZE];
+        int count = worldGetAllVehicles(vehicles, ARR_SIZE);
+        lua_createtable(L, ARR_SIZE, 1);
+        int newTable = lua_gettop(L);
 
+        for (int i = 0; i < ARR_SIZE; i++) {
+            lua_pushinteger(L, vehicles[i]);
+            lua_rawseti(L, newTable, i + 1);
+        }
+        return 1;
+    }
+    int Methods::WorldGetAllPeds(lua_State* L) {
+        const int ARR_SIZE = 1024;
+        Ped peds[ARR_SIZE];
+        int count = worldGetAllPeds(peds, ARR_SIZE);
+        lua_createtable(L, ARR_SIZE, 1);
+        int newTable = lua_gettop(L);
+
+        for (int i = 0; i < ARR_SIZE; i++) {
+            lua_pushinteger(L, peds[i]);
+            lua_rawseti(L, newTable, i + 1);
+        }
+        return 1;
+    }
+    int Methods::WorldGetAllObjects(lua_State* L) {
+        const int ARR_SIZE = 1024;
+        Object objects[ARR_SIZE];
+        int count = worldGetAllObjects(objects, ARR_SIZE);
+        lua_createtable(L, ARR_SIZE, 1);
+        int newTable = lua_gettop(L);
+
+        for (int i = 0; i < ARR_SIZE; i++) {
+            lua_pushinteger(L, objects[i]);
+            lua_rawseti(L, newTable, i + 1);
+        }
+        return 1;
+    }
+    int Methods::WorldGetAllPickups(lua_State* L) {
+        const int ARR_SIZE = 1024;
+        Pickup pickups[ARR_SIZE];
+        int count = worldGetAllPickups(pickups, ARR_SIZE);
+        lua_createtable(L, ARR_SIZE, 1);
+        int newTable = lua_gettop(L);
+
+        for (int i = 0; i < ARR_SIZE; i++) {
+            lua_pushinteger(L, pickups[i]);
+            lua_rawseti(L, newTable, i + 1);
+        }
+        return 1;
+    }
     static const luaL_reg modfuncs[] =
     {
         { "CallNative", Methods::CallNative},
         { "ScriptWait", Methods::Wait},
-        { "KeyDown", Methods::KeyDown},
-        { "KeyJustUp", Methods::KeyJustUp},
-        { "KeyPressedOnce", Methods::KeyPressedOnce},
+        { "IsKeyDown", Methods::IsKeyDown},
+        { "IsKeyDownLong", Methods::IsKeyDownLong},
+        { "IsKeyJustUp", Methods::IsKeyJustUp},
         { "ResetKeyState", Methods::ResetKeyState},
+        { "WorldGetAllVehicles", Methods::WorldGetAllVehicles},
+        { "WorldGetAllPeds", Methods::WorldGetAllPeds},
+        { "WorldGetAllObjects", Methods::WorldGetAllObjects},
+        { "WorldGetAllPickups", Methods::WorldGetAllPickups},
         { NULL, NULL }
     };
     void Engine::ScriptRegister()
@@ -181,7 +272,7 @@ namespace Lua {
         luaEngine->Init();
         luaEngine->Run();
     }
-    void Engine::ScriptUnregister()
+    void Engine::BeforeScriptUnregister()
     {
         luaEngine->Shutdown();
         delete luaEngine;
@@ -239,7 +330,7 @@ namespace Lua {
         luaL_register(LuaState, "LUAENGINE", modfuncs);
 
         std::ostringstream LuaMainPath;
-        LuaMainPath << LuaEnginePath.c_str() << "/" << "/scripts/lua/main.lua";
+        LuaMainPath << LuaEnginePath.c_str() << "/scripts/lua/main.lua";
         Log::Info << "Lua Restarted, Starting Main" << Log::Endl;
         auto error = luaL_dofile(LuaState, LuaMainPath.str().c_str());
         if (error) {
@@ -260,14 +351,10 @@ namespace Lua {
         Run();
     }
 
-    void Engine::Stop()
-    {
-    }
+ 
 
     Engine::~Engine()
     {
-        delete LuaState;
-        LuaState = nullptr;
-        delete this;
+        lua_close(LuaState);
     }
 }

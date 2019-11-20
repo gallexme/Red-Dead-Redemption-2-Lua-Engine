@@ -28,8 +28,8 @@
     <Filter Include="Quelldateien\Lua\lfs">
       <UniqueIdentifier>{76325015-bf41-435d-b432-ec28e474d0b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headerdateien\RedHook2">
-      <UniqueIdentifier>{d0ce939d-be3d-4592-bc25-c9ffd5a79c7c}</UniqueIdentifier>
+    <Filter Include="Headerdateien\ScriptHook">
+      <UniqueIdentifier>{f5184837-5ba2-4d3d-a443-d266761d9bb8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,17 +63,26 @@
     <ClInclude Include="common.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\lib\redhook2\inc\redhook2.h">
-      <Filter>Headerdateien\RedHook2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\redhook2\inc\types.h">
-      <Filter>Headerdateien\RedHook2</Filter>
-    </ClInclude>
     <ClInclude Include="LuaEngine.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\lib\scripthook\inc\enums.h">
+      <Filter>Headerdateien\ScriptHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\scripthook\inc\main.h">
+      <Filter>Headerdateien\ScriptHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\scripthook\inc\nativeCaller.h">
+      <Filter>Headerdateien\ScriptHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\scripthook\inc\natives.h">
+      <Filter>Headerdateien\ScriptHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\scripthook\inc\types.h">
+      <Filter>Headerdateien\ScriptHook</Filter>
+    </ClInclude>
     <ClInclude Include="keyboard.hpp">
-      <Filter>Headerdateien\RedHook2</Filter>
+      <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
